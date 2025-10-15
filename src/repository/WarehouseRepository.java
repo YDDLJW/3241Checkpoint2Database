@@ -79,13 +79,13 @@ public class WarehouseRepository {
                     max = v;
                 }
             } catch (NumberFormatException ignore) {
-                // If a non-numeric id exists, we simply ignore it for auto-increment purposes.
+                // If a non-numeric id exists, ignore it.
             }
         }
         return String.valueOf(max + 1);
     }
 
-    // Convert one Warehouse to a JSON object string (manual, minimal escaping).
+    // Convert one Warehouse to a JSON object string.
     private String toJson(Warehouse w) {
         StringBuilder sb = new StringBuilder();
         sb.append("{").append("\"id\":\"").append(this.esc(w.getId())).append("\",")
@@ -106,7 +106,7 @@ public class WarehouseRepository {
                 + this.esc(field) + "\"," + "\"value\":\"" + this.esc(value) + "\"" + "}";
     }
 
-    // Minimal JSON string escape (quotes and backslashes)
+    // Minimal JSON string escape
     private String esc(String s) {
         if (s == null) {
             return "";
@@ -210,7 +210,7 @@ public class WarehouseRepository {
         return sb.toString();
     }
 
-    // Capacity equals / ranges (exact numeric comparisons)
+    // Capacity equals / ranges
 
     public String queryByEquipmentCapacity(int capacity) {
         StringBuilder sb = new StringBuilder();
@@ -290,7 +290,7 @@ public class WarehouseRepository {
         if (a == null || b == null) {
             return false;
         }
-        return a.equals(b); // exact, case-sensitive
+        return a.equals(b);
     }
 
 }
