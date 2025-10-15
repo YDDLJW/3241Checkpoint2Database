@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import repository.WarehouseRepository;
+import repository.EquipmentManagement;
 
 /**
  * TextInterface - Console-based entrypoint. - Hosts repositories (currently
@@ -13,6 +14,7 @@ import repository.WarehouseRepository;
 public class TextInterface {
     // Repositories (currently only Warehouse)
     private final WarehouseRepository warehouseRepo = new WarehouseRepository();
+    private final EquipmentManagement equipmentRepo = new EquipmentManagement();
 
     // Console scanner
     private final Scanner in = new Scanner(System.in);
@@ -32,7 +34,11 @@ public class TextInterface {
             String choice = this.readLine("Please enter a number: ");
             if ("1".equals(choice)) {
                 this.warehouseMenu();
-            } else if ("0".equals(choice)) {
+            }
+            else if ("2".equals(choice)) {
+                this.equipmentManagementMenu();
+            }
+            else if ("0".equals(choice)) {
                 this.println("Bye!");
                 break;
             } else {
@@ -48,6 +54,7 @@ public class TextInterface {
         this.println("");
         this.println("Main menu:");
         this.println("1. Warehouse");
+        this.println("2. Equipment Management");
         this.println("0. Exit");
     }
 
@@ -83,6 +90,41 @@ public class TextInterface {
             } else if ("4".equals(op)) {
                 this.handleWarehouseDelete();
             } else if ("5".equals(op)) {
+                return; // back to main menu
+            } else {
+                this.println("[Input Error] Unknown operation: " + op);
+            }
+        }
+    }
+
+    private void equipmentManagementMenu() {
+        while (true) {
+            this.println("");
+            this.println("=== Equipment Management ===");
+            this.println("Current data:");
+            this.println(this.equipmentRepo.toString());
+
+            this.println("");
+            this.println("Operations:");
+            this.println("1. Add Equipment");
+            this.println("2. Rent Equipment");
+            this.println("3. Return Equipment");
+            this.println("4. Deliver Equipment");
+            this.println("5. Pickup Equipment");
+            this.println("6. Return to Main menu");
+
+            String op = this.readLine("Enter 1/2/3/4/5/6: ");
+            if ("1".equals(op)) {
+                this.handleEquipmentAdd();
+            } else if ("2".equals(op)) {
+                this.handleEquipmentRent();
+            } else if ("3".equals(op)) {
+                this.handleEquipmentReturn();
+            } else if ("4".equals(op)) {
+                this.handleEquipmentDelivery();
+            } else if ("5".equals(op)) {
+                this.handleEquipmentPickup();
+            } else if ("6".equals(op)) {
                 return; // back to main menu
             } else {
                 this.println("[Input Error] Unknown operation: " + op);
@@ -266,6 +308,102 @@ public class TextInterface {
         String json = this.warehouseRepo.delete(id);
         this.println("Deleted (or error):");
         this.println(json);
+    }
+
+    private void handleEquipmentAdd() {
+        while (true) {
+            this.println("");
+            this.println("=== Equipment Add ===");
+            String idStr = this.readLine("Please enter a unique equipment id: ");
+            Integer id = this.parseInt(idStr);
+            if (id == null) {
+                this.println("[Input Error] Equipment id must be an integer. Exiting...");
+                return;
+            }
+            String name = this.readLine("Please enter the equipment name: ");
+            this.equipmentRepo.AddEquipment(id, name);
+            this.println("Success! Equipment " + name + " added with id " + id + ".");
+            return;
+        }
+    }
+
+    private void handleEquipmentDelivery() {
+        while (true) {
+            this.println("");
+            this.println("=== Equipment Delivery ===");
+            String idStr = this.readLine("Please enter the unique equipment id: ");
+            Integer idItem = this.parseInt(idStr);
+            if (idItem == null) {
+                this.println("[Input Error] Equipment id must be an integer. Exiting...");
+                return;
+            }
+            idStr = this.readLine("Please enter the drone id: ");
+            Integer idDrone = this.parseInt(idStr);
+                if (idDrone == null) {
+                this.println("[Input Error] Drone id must be an integer. Exiting...");
+                return;
+            }
+            String date = this.readLine("Please enter the delivery date (MM/DD/YYYY): ");
+            this.equipmentRepo.DeliverEquipment(idItem, idDrone, date);
+            this.println("Exiting...");
+            return;
+        }
+    }
+
+    private void handleEquipmentPickup() {
+        while (true) {
+            this.println("");
+            this.println("=== Equipment Pickup ===");
+            String idStr = this.readLine("Please enter the unique equipment id: ");
+            Integer idItem = this.parseInt(idStr);
+            if (idItem == null) {
+                this.println("[Input Error] Equipment id must be an integer. Exiting...");
+                return;
+            }
+            idStr = this.readLine("Please enter the drone id: ");
+            Integer idDrone = this.parseInt(idStr);
+                if (idDrone == null) {
+                this.println("[Input Error] Drone id must be an integer. Exiting...");
+                return;
+            }
+            String date = this.readLine("Please enter the pickup date (MM/DD/YYYY): ");
+            this.equipmentRepo.DeliverEquipment(idItem, idDrone, date);
+            this.println("Exiting...");
+            return;
+        }
+    }
+
+    private void handleEquipmentRent() {
+        while (true) {
+            this.println("");
+            this.println("=== Equipment Rent ===");
+            String idStr = this.readLine("Please enter a unique equipment id: ");
+            Integer id = this.parseInt(idStr);
+            if (id == null) {
+                this.println("[Input Error] Equipment id must be an integer. Exiting...");
+                return;
+            }
+            String name = this.equipmentRepo.RentEquipment(id);
+            if (name.equals("Invalid")) {
+                this.println("[Input Error] This id does not correspond with any equipment. Exiting...");
+            } else {
+                this.println("Success! Equipment " + name + " rented with id " + id + ".");
+            }
+            return;
+        }
+    }
+
+    private void handleEquipmentReturn() {
+        this.println("");
+        this.println("=== Return Equipment ===");
+        String idStr = this.readLine("Enter id of the equipment to return: ");
+        Integer id = this.parseInt(idStr);
+            if (id == null) {
+                this.println("[Input Error] Equipment id must be an integer. Exiting...");
+                return;
+            }
+        this.equipmentRepo.ReturnEquipment(id);
+        this.println("Exiting...");
     }
 
     // ============================== Helpers ==============================
