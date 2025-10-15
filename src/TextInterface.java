@@ -143,8 +143,9 @@ public class TextInterface {
     private void handleWarehouseCreate() {
         this.println("");
         this.println("Create Warehouse");
+        this.println("Please input attributes in format (with braces):");
         this.println(
-                "Please input attributes in format {phoneNumber, city, zipCode, street, equipmentCapacity, droneCapacity, managerSSN}");
+                "{phoneNumber, city, zipCode, street, equipmentCapacity, droneCapacity, managerSSN}");
         String line = this.readLine("> ");
 
         List<String> parts = this.parseBraceList(line);
