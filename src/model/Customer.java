@@ -3,9 +3,6 @@ package model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// This is Christina's test commit
-// test test
-
 /**
  * Customer - Mirrors the "Customer" table in your schema: User_ID (PK),
  * Cust_Start_Date, City, Zip Code, Street, Email, Phone #, Cust_Name, Type -
